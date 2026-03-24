@@ -1,5 +1,4 @@
 import { Image } from 'expo-image';
-import { memo } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Badge } from '@/components/Badge';
@@ -13,7 +12,7 @@ import { getCategoryColor, type EventCardProps } from './EventCard.types';
 
 export type { EventCardProps };
 
-export const EventCard = memo(function EventCard(props: EventCardProps) {
+export function EventCard(props: EventCardProps) {
   if (props.variant === 'list') {
     const { title, date, location, imageUrl, category, onPress } = props;
     return (
@@ -39,7 +38,7 @@ export const EventCard = memo(function EventCard(props: EventCardProps) {
 
   const { title, date, location, category, description, imageUrl, onAddToCalendar, onRegister } = props;
   return (
-    <Card style={styles.detailContainer}>
+    <View style={styles.detailContainer}>
       <View style={styles.detailHeader}>
         <View style={styles.detailTitleRow}>
           <Text size="XL" style={styles.detailTitle}>{title}</Text>
@@ -50,23 +49,21 @@ export const EventCard = memo(function EventCard(props: EventCardProps) {
         <Text size="S" muted>{formatDate(date, 'dateOnly')}</Text>
         {location ? <Text size="S" muted>{location}</Text> : null}
       </View>
-      <View style={styles.detailImageWrapper}>
-        {imageUrl ? (
-          <Image source={{ uri: imageUrl }} style={styles.detailImage} contentFit="cover" />
-        ) : (
-          <View style={styles.detailImagePlaceholder} />
-        )}
-      </View>
+      {imageUrl ? (
+        <Image source={{ uri: imageUrl }} style={styles.detailImage} contentFit="cover" />
+      ) : (
+        <View style={styles.detailImagePlaceholder} />
+      )}
       {description ? (
-        <Text size="S" muted>{description}</Text>
+        <Text size="M" style={styles.description}>{description}</Text>
       ) : null}
       <View style={styles.actions}>
         <Button color="neutral" size="lg" fullWidth onPress={onAddToCalendar}>Ajouter au calendrier</Button>
         <Button color="blue" size="lg" fullWidth onPress={onRegister}>Je m'inscris</Button>
       </View>
-    </Card>
+    </View>
   );
-});
+}
 
 const styles = StyleSheet.create({
   pressed: {
@@ -97,7 +94,6 @@ const styles = StyleSheet.create({
   },
   detailContainer: {
     gap: 16,
-    padding: 20,
   },
   detailHeader: {
     gap: 4,
@@ -110,21 +106,19 @@ const styles = StyleSheet.create({
   detailTitle: {
     flex: 1,
   },
-  detailImageWrapper: {
-    alignItems: 'center',
-  },
   detailImage: {
     width: '100%',
-    maxWidth: 370,
-    aspectRatio: 1,
+    height: 220,
     borderRadius: radius.lg,
   },
   detailImagePlaceholder: {
     width: '100%',
-    maxWidth: 370,
-    aspectRatio: 1,
+    height: 220,
     borderRadius: radius.lg,
     backgroundColor: '#e0e0e0',
+  },
+  description: {
+    lineHeight: 22,
   },
   actions: {
     gap: 12,
