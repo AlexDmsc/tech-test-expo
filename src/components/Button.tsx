@@ -14,6 +14,7 @@ export type ButtonProps = {
   disabled?: boolean;
   color?: ButtonColor;
   size?: ButtonSize;
+  fullWidth?: boolean;
 };
 
 const colorMap: Record<ButtonColor, { bg: string; text: string }> = {
@@ -34,6 +35,7 @@ export function Button({
   disabled = false,
   color = 'blue',
   size = 'md',
+  fullWidth = false,
 }: ButtonProps) {
   const { bg, text } = colorMap[color];
   const { paddingH, paddingV, fontSize } = sizeMap[size];
@@ -42,16 +44,14 @@ export function Button({
     <Pressable
       onPress={onPress}
       disabled={disabled}
-      style={({ pressed }) => [
-        styles.button,
-        {
-          backgroundColor: bg,
-          paddingHorizontal: paddingH,
-          paddingVertical: paddingV,
-          borderRadius: radius.md,
-          opacity: disabled ? 0.5 : pressed ? 0.9 : 1,
-        },
-      ]}>
+      style={({ pressed }) => ({
+        backgroundColor: bg,
+        paddingHorizontal: paddingH,
+        paddingVertical: paddingV,
+        borderRadius: radius.md,
+        opacity: disabled ? 0.5 : pressed ? 0.9 : 1,
+        ...(fullWidth && { alignSelf: 'stretch' as const }),
+      })}>
       <View style={styles.content}>
         <Text style={[styles.label, { color: text, fontSize }]}>{children}</Text>
       </View>
@@ -60,12 +60,10 @@ export function Button({
 }
 
 const styles = StyleSheet.create({
-  button: {
-    alignSelf: 'flex-start',
-  },
   content: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   label: {
     fontWeight: '600',
